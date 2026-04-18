@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Camisetas - Banda Emilio Valenzuela</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #dc2626;
+            --accent: #fbbf24;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --success: #10b981;
+            --border: #cbd5e1;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--dark) 0%, #1e293b 100%);
+            color: #1e293b;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        header h1 {
+            color: var(--accent);
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            color: #94a3b8;
+            font-size: 1.1em;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            animation: fadeInUp 0.6s ease-out 0.1s both;
+        }
+
+        .form-section h2 {
+            color: var(--primary);
+            margin-bottom: 25px;
+            font-size: 1.5em;
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+        }
+
+        .radio-group, .checkbox-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .radio-option, .checkbox-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .radio-option input, .checkbox-option input {
+            width: auto;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .size-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .size-option {
+            position: relative;
+        }
+
+        .size-option input {
+            display: none;
+        }
+
+        .size-option label {
+            display: block;
+            margin: 0;
+            padding: 12px;
+            text-align: center;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            background: var(--light);
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .size-option input:checked + label {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .instrument-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .file-upload {
+            position: relative;
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: var(--light);
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary);
+            background: #eff6ff;
+        }
+
+        .file-upload input {
+            display: none;
+        }
+
+        .file-upload span {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .file-preview {
+            margin-top: 10px;
+            padding: 10px;
+            background: #d1fae5;
+            border-radius: 6px;
+            color: var(--success);
+            font-weight: 600;
+            display: none;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 58, 138, 0.3);
+        }
+
+        .btn-small {
+            width: auto;
+            padding: 8px 16px;
+            font-size: 0.9em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            animation: fadeInUp 0.6s ease-out 0.2s both;
+        }
+
+        .stat-card h3 {
+            color: var(--primary);
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-card .value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: var(--secondary);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            animation: fadeInUp 0.6s ease-out 0.3s both;
+        }
+
+        .data-table thead {
+            background: var(--primary);
+            color: white;
+        }
+
+        .data-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .data-table td {
+            padding: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table tbody tr:hover {
+            background: #f0f4f8;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .status-paid {
+            background: #d1fae5;
+            color: var(--success);
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .btn-delete {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: all 0.3s;
+        }
+
+        .btn-delete:hover {
+            background: #991b1b;
+        }
+
+        .summary-box {
+            background: linear-gradient(135deg, var(--primary) 0%, #3b82f6 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+            animation: fadeInUp 0.6s ease-out 0.4s both;
+        }
+
+        .summary-box h3 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        .summary-detail {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+        }
+
+        .empty-state svg {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .addons-preview {
+            background: #eff6ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .addon-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+
+        .addon-item strong {
+            color: var(--primary);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .required {
+            color: var(--secondary);
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .form-section {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎵 Registro de Camisetas - Banda</h1>
+            <p>Colegio Emilio Valenzuela</p>
+        </header>
+
+        <div class="main-grid">
+            <!-- FORMULARIO DE REGISTRO -->
+            <div class="form-section">
+                <h2>📝 Registro Nuevo</h2>
+                <form id="registroForm">
+                    <!-- Tipo de participante -->
+                    <div class="form-group">
+                        <label><span class="required">*</span> Tipo de Participante</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="integrante" name="tipo" value="integrante" required>
+                                <label for="integrante" style="margin: 0;">Integrante de Banda</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="padre" name="tipo" value="padre">
+                                <label for="padre" style="margin: 0;">Padre Acompañante</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Instrumento (solo para integrantes) -->
+                    <div class="form-group" id="grupoInstrumento" style="display: none;">
+                        <label><span class="required">*</span> Instrumento</label>
+                        <div class="instrument-grid">
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="instrumento" value="Flauta">
+                                <label for="" style="margin: 0;">Flauta</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="instrumento" value="Clarinete">
+                                <label for="" style="margin: 0;">Clarinete</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="instrumento" value="Saxofón">
+                                <label for="" style="margin: 0;">Saxofón</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="instrumento" value="Trompeta">
+                                <label for="" style="margin: 0;">Trompeta</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="instrumento" value="Trompa">
+                                <label for="" style="margin: 0;">Trompa</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="instrumento" value="Trombón">
+                                <label for="" style="margin: 0;">Trombón</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="instrumento" value="Tuba">
+                                <label for="" style="margin: 0;">Tuba</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" name="instrumento" value="Percusión">
+                                <label for="" style="margin: 0;">Percusión</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Nombre -->
+                    <div class="form-group">
+                        <label><span class="required">*</span> Nombre Completo</label>
+                        <input type="text" id="nombre" name="nombre" required placeholder="Ingrese el nombre completo">
+                    </div>
+
+                    <!-- Género de Camiseta -->
+                    <div class="form-group">
+                        <label><span class="required">*</span> Género de Camiseta</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="hombre" name="genero" value="Hombre" required>
+                                <label for="hombre" style="margin: 0;">Hombre</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="mujer" name="genero" value="Mujer">
+                                <label for="mujer" style="margin: 0;">Mujer</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Talla (hombre) -->
+                    <div class="form-group" id="tallaHombreGroup">
+                        <label><span class="required">*</span> Talla (Cuello Redondo)</label>
+                        <div class="size-grid">
+                            <div class="size-option">
+                                <input type="radio" id="t12_h" name="talla" value="12 (Hombre)" data-genero="Hombre">
+                                <label for="t12_h">12</label>
+                            </div>
+                            <div class="size-option">
+                                <input type="radio" id="t14_h" name="talla" value="14 (Hombre)" data-genero="Hombre">
+                                <label for="t14_h">14</label>
+                            </div>
+                            <div class="size-option">
+                                <input type="radio" id="t16_h" name="talla" value="16 (Hombre)" data-genero="Hombre">
+                                <label for="t16_h">16</label>
+                            </div>
+                            <div class="size-option">
+                                <input type="radio" id="s_h" name="talla" value="S (Hombre)" data-genero="Hombre">
+                                <label for="s_h">S</label>
+                            </div>
+                            <div class="size-option">
+                                <input type="radio" id="m_h" name="talla" value="M (Hombre)" data-genero="Hombre">
+                                <label for="m_h">M</label>
+                            </div>
+                            <div class="size-option">
+                                <input type="radio" id="l_h" name="talla" value="L (Hombre)" data-genero="Hombre">
+                                <label for="l_h">L</label>
+                            </div>
+                            <div class="size-option">
+                                <input type="radio" id="xl_h" name="talla" value="XL (Hombre)" data-genero="Hombre">
+                                <label for="xl_h">XL</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Talla (mujer) -->
+                    <div class="form-group" id="tallaMujerGroup" style="display: none;">
+                        <label><span class="required">*</span> Talla (Cuello en V)</label>
+                        <div class="size-grid">
+                            <div class="size-option">
+                                <input type="radio" id="s_m" name="talla" value="S (Mujer)" data-genero="Mujer">
+                                <label for="s_m">S</label>
+                            </div>
+                            <div class="size-option">
+                                <input type="radio" id="m_m" name="talla" value="M (Mujer)" data-genero="Mujer">
+                                <label for="m_m">M</label>
+                            </div>
+                            <div class="size-option">
+                                <input type="radio" id="l_m" name="talla" value="L (Mujer)" data-genero="Mujer">
+                                <label for="l_m">L</label>
+                            </div>
+                            <div class="size-option">
+                                <input type="radio" id="xl_m" name="talla" value="XL (Mujer)" data-genero="Mujer">
+                                <label for="xl_m">XL</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Estado de Pago -->
+                    <div class="form-group">
+                        <label><span class="required">*</span> Estado de Pago</label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="pagado" name="estatus_pago" value="Pagado" required>
+                                <label for="pagado" style="margin: 0;">Pagado</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="pendiente" name="estatus_pago" value="Pendiente">
+                                <label for="pendiente" style="margin: 0;">Pendiente</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Medio de Pago -->
+                    <div class="form-group" id="medioPagoGroup" style="display: none;">
+                        <label>Medio de Pago</label>
+                        <select id="medioPago" name="medioPago">
+                            <option value="">Seleccione un medio</option>
+                            <option value="Transferencia">Transferencia</option>
+                            <option value="Efectivo">Efectivo</option>
+                            <option value="Nequi">Nequi</option>
+                            <option value="Daviplata">Daviplata</option>
+                            <option value="Tarjeta Crédito">Tarjeta Crédito</option>
+                            <option value="Tarjeta Débito">Tarjeta Débito</option>
+                        </select>
+                    </div>
+
+                    <!-- Comprobante de Pago -->
+                    <div class="form-group" id="comprobanteGroup" style="display: none;">
+                        <label>Comprobante de Pago</label>
+                        <div class="file-upload" onclick="document.getElementById('comprobante').click()">
+                            <input type="file" id="comprobante" name="comprobante" accept="image/*,.pdf">
+                            <span>📎 Haga clic para subir archivo</span>
+                            <div class="file-preview" id="comprobantePreview"></div>
+                        </div>
+                    </div>
+
+                    <!-- Adicionales -->
+                    <div class="form-group">
+                        <label>Adicionales</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-option">
+                                <input type="checkbox" id="pin" name="adicionales" value="Pin">
+                                <label for="pin" style="margin: 0;">📌 Pin ($5.000)</label>
+                            </div>
+                            <div class="checkbox-option">
+                                <input type="checkbox" id="gorra" name="adicionales" value="Gorra">
+                                <label for="gorra" style="margin: 0;">🧢 Gorra ($10.000)</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn">✅ Registrar Participante</button>
+                </form>
+            </div>
+
+            <!-- PANEL DE ESTADÍSTICAS -->
+            <div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Participantes</h3>
+                        <div class="value" id="totalParticipantes">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Camisetas</h3>
+                        <div class="value" id="totalCamisetas">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Pagados</h3>
+                        <div class="value" id="totalPagados">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Pendientes</h3>
+                        <div class="value" id="totalPendientes">0</div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>🎁 Resumen de Adicionales</h2>
+                    <div id="resumenAdicionales">
+                        <p style="color: #94a3b8; text-align: center;">Sin registros aún</p>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>⚙️ Acciones</h2>
+                    <button class="btn btn-small" onclick="descargarExcel()">📊 Descargar Excel</button>
+                    <button class="btn btn-small" onclick="window.print()" style="margin-top: 10px;">🖨️ Imprimir</button>
+                    <button class="btn btn-small" onclick="limpiarTodo()" style="margin-top: 10px; background: var(--secondary);">🗑️ Limpiar Todo</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABLA DE DATOS -->
+        <div class="form-section">
+            <h2>📋 Registro Completo</h2>
+            <div id="dataTableContainer">
+                <div class="empty-state">
+                    <p>No hay registros aún. Completa el formulario para comenzar.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- RESUMEN EJECUTIVO -->
+        <div class="summary-box" id="summaryBox" style="display: none;">
+            <h3>📊 Resumen Ejecutivo</h3>
+            <div class="summary-detail">
+                <strong>Total de Camisetas:</strong> <span id="summaryTotal">0</span>
+            </div>
+            <div class="summary-detail">
+                <strong>Pagadas:</strong> <span id="summaryPaid">0</span> | <strong>Por Pagar:</strong> <span id="summaryPending">0</span>
+            </div>
+            <div class="summary-detail" id="summaryBreakdown"></div>
+        </div>
+    </div>
+
+    <script>
+        // Almacenamiento de datos
+        let registros = JSON.parse(localStorage.getItem('registrosCamisetas')) || [];
+
+        // Event Listeners
+        document.getElementById('registroForm').addEventListener('submit', handleSubmit);
+        document.getElementById('integrante').addEventListener('change', toggleInstrumento);
+        document.getElementById('padre').addEventListener('change', toggleInstrumento);
+        document.getElementById('hombre').addEventListener('change', toggleTallas);
+        document.getElementById('mujer').addEventListener('change', toggleTallas);
+        document.getElementById('pagado').addEventListener('change', toggleMedioPago);
+        document.getElementById('pendiente').addEventListener('change', toggleMedioPago);
+        document.getElementById('comprobante').addEventListener('change', handleFileUpload);
+
+        function toggleInstrumento() {
+            const grupoInstrumento = document.getElementById('grupoInstrumento');
+            const esIntegrante = document.getElementById('integrante').checked;
+            grupoInstrumento.style.display = esIntegrante ? 'block' : 'none';
+            
+            if (!esIntegrante) {
+                document.querySelectorAll('input[name="instrumento"]').forEach(el => el.checked = false);
+            }
+        }
+
+        function toggleTallas() {
+            const tallaHombreGroup = document.getElementById('tallaHombreGroup');
+            const tallaMujerGroup = document.getElementById('tallaMujerGroup');
+            const esHombre = document.getElementById('hombre').checked;
+            
+            tallaHombreGroup.style.display = esHombre ? 'block' : 'none';
+            tallaMujerGroup.style.display = esHombre ? 'none' : 'block';
+            
+            document.querySelectorAll('input[name="talla"]').forEach(el => el.checked = false);
+        }
+
+        function toggleMedioPago() {
+            const isPagado = document.getElementById('pagado').checked;
+            document.getElementById('medioPagoGroup').style.display = isPagado ? 'block' : 'none';
+            document.getElementById('comprobanteGroup').style.display = isPagado ? 'block' : 'none';
+        }
+
+        function handleFileUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const preview = document.getElementById('comprobantePreview');
+                preview.textContent = `✅ ${file.name}`;
+                preview.style.display = 'block';
+            }
+        }
+
+        function handleSubmit(e) {
+            e.preventDefault();
+
+            const formData = new FormData(document.getElementById('registroForm'));
+            
+            const instrumentos = Array.from(document.querySelectorAll('input[name="instrumento"]:checked'))
+                .map(el => el.value);
+            
+            const adicionales = Array.from(document.querySelectorAll('input[name="adicionales"]:checked'))
+                .map(el => el.value);
+
+            const registro = {
+                id: Date.now(),
+                tipo: formData.get('tipo'),
+                instrumento: instrumentos.join(', ') || '-',
+                nombre: formData.get('nombre'),
+                genero: formData.get('genero'),
+                talla: formData.get('talla'),
+                estatus_pago: formData.get('estatus_pago'),
+                medioPago: formData.get('medioPago') || '-',
+                comprobante: document.getElementById('comprobante').files[0]?.name || '-',
+                adicionales: adicionales.length > 0 ? adicionales.join(', ') : 'Ninguno',
+                fecha: new Date().toLocaleDateString('es-CO')
+            };
+
+            registros.push(registro);
+            localStorage.setItem('registrosCamisetas', JSON.stringify(registros));
+
+            // Limpiar formulario
+            document.getElementById('registroForm').reset();
+            document.getElementById('grupoInstrumento').style.display = 'none';
+            document.getElementById('medioPagoGroup').style.display = 'none';
+            document.getElementById('comprobanteGroup').style.display = 'none';
+            document.getElementById('comprobantePreview').style.display = 'none';
+
+            actualizarVista();
+            mostrarNotificacion('✅ Participante registrado exitosamente');
+        }
+
+        function actualizarVista() {
+            actualizarEstadisticas();
+            actualizarTabla();
+            actualizarResumen();
+        }
+
+        function actualizarEstadisticas() {
+            const totalParticipantes = registros.length;
+            const totalCamisetas = registros.length;
+            const pagados = registros.filter(r => r.estatus_pago === 'Pagado').length;
+            const pendientes = registros.filter(r => r.estatus_pago === 'Pendiente').length;
+
+            document.getElementById('totalParticipantes').textContent = totalParticipantes;
+            document.getElementById('totalCamisetas').textContent = totalCamisetas;
+            document.getElementById('totalPagados').textContent = pagados;
+            document.getElementById('totalPendientes').textContent = pendientes;
+
+            // Resumen de adicionales
+            const conteoAdicionales = {};
+            registros.forEach(r => {
+                if (r.adicionales !== 'Ninguno') {
+                    const items = r.adicionales.split(', ');
+                    items.forEach(item => {
+                        conteoAdicionales[item] = (conteoAdicionales[item] || 0) + 1;
+                    });
+                }
+            });
+
+            const resumenDiv = document.getElementById('resumenAdicionales');
+            if (Object.keys(conteoAdicionales).length > 0) {
+                let html = '';
+                if (conteoAdicionales['Pin']) {
+                    html += `<div class="addon-item">📌 <strong>Pines:</strong> ${conteoAdicionales['Pin']} unidades</div>`;
+                }
+                if (conteoAdicionales['Gorra']) {
+                    html += `<div class="addon-item">🧢 <strong>Gorras:</strong> ${conteoAdicionales['Gorra']} unidades</div>`;
+                }
+                resumenDiv.innerHTML = html;
+            } else {
+                resumenDiv.innerHTML = '<p style="color: #94a3b8; text-align: center;">Sin adicionales registrados</p>';
+            }
+        }
+
+        function actualizarTabla() {
+            const container = document.getElementById('dataTableContainer');
+
+            if (registros.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>No hay registros aún.</p></div>';
+                return;
+            }
+
+            let html = `
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>Instrumento</th>
+                            <th>Género</th>
+                            <th>Talla</th>
+                            <th>Pago</th>
+                            <th>Medio</th>
+                            <th>Adicionales</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            registros.forEach(registro => {
+                const statusClass = registro.estatus_pago === 'Pagado' ? 'status-paid' : 'status-pending';
+                html += `
+                    <tr>
+                        <td><strong>${registro.nombre}</strong></td>
+                        <td>${registro.tipo === 'integrante' ? '🎵 Integrante' : '👨‍👩‍👧 Padre'}</td>
+                        <td>${registro.instrumento}</td>
+                        <td>${registro.genero}</td>
+                        <td>${registro.talla}</td>
+                        <td><span class="status-badge ${statusClass}">${registro.estatus_pago}</span></td>
+                        <td>${registro.medioPago}</td>
+                        <td><small>${registro.adicionales}</small></td>
+                        <td><button class="btn-delete" onclick="eliminarRegistro(${registro.id})">Eliminar</button></td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                    </tbody>
+                </table>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function actualizarResumen() {
+            const summaryBox = document.getElementById('summaryBox');
+            if (registros.length === 0) {
+                summaryBox.style.display = 'none';
+                return;
+            }
+
+            summaryBox.style.display = 'block';
+
+            const pagados = registros.filter(r => r.estatus_pago === 'Pagado').length;
+            const pendientes = registros.filter(r => r.estatus_pago === 'Pendiente').length;
+
+            const conteoTallas = {};
+            registros.forEach(r => {
+                conteoTallas[r.talla] = (conteoTallas[r.talla] || 0) + 1;
+            });
+
+            document.getElementById('summaryTotal').textContent = registros.length;
+            document.getElementById('summaryPaid').textContent = pagados;
+            document.getElementById('summaryPending').textContent = pendientes;
+
+            let breakdown = '<strong>Desglose de Tallas:</strong><br>';
+            Object.entries(conteoTallas).forEach(([talla, cantidad]) => {
+                breakdown += `${talla}: ${cantidad} | `;
+            });
+            breakdown = breakdown.slice(0, -3);
+
+            document.getElementById('summaryBreakdown').innerHTML = breakdown;
+        }
+
+        function eliminarRegistro(id) {
+            if (confirm('¿Está seguro de que desea eliminar este registro?')) {
+                registros = registros.filter(r => r.id !== id);
+                localStorage.setItem('registrosCamisetas', JSON.stringify(registros));
+                actualizarVista();
+                mostrarNotificacion('Registro eliminado');
+            }
+        }
+
+        function descargarExcel() {
+            if (registros.length === 0) {
+                alert('No hay registros para descargar');
+                return;
+            }
+
+            let csv = 'Nombre,Tipo,Instrumento,Género,Talla,Estado de Pago,Medio de Pago,Comprobante,Adicionales,Fecha\n';
+            
+            registros.forEach(r => {
+                csv += `"${r.nombre}","${r.tipo}","${r.instrumento}","${r.genero}","${r.talla}","${r.estatus_pago}","${r.medioPago}","${r.comprobante}","${r.adicionales}","${r.fecha}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `registro_camisetas_${new Date().toLocaleDateString('es-CO')}.csv`;
+            link.click();
+
+            mostrarNotificacion('✅ Archivo descargado exitosamente');
+        }
+
+        function limpiarTodo() {
+            if (confirm('⚠️ ¿Está seguro de que desea eliminar TODOS los registros? Esta acción no se puede deshacer.')) {
+                registros = [];
+                localStorage.setItem('registrosCamisetas', JSON.stringify(registros));
+                actualizarVista();
+                mostrarNotificacion('Todos los registros han sido eliminados');
+            }
+        }
+
+        function mostrarNotificacion(mensaje) {
+            const notif = document.createElement('div');
+            notif.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--success);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                z-index: 1000;
+                animation: slideInRight 0.3s ease-out;
+            `;
+            notif.textContent = mensaje;
+            document.body.appendChild(notif);
+
+            setTimeout(() => {
+                notif.remove();
+            }, 3000);
+        }
+
+        // Cargar datos al iniciar
+        document.addEventListener('DOMContentLoaded', actualizarVista);
+    </script>
+</body>
+</html>
